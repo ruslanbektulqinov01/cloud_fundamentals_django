@@ -19,9 +19,11 @@ from django.urls import path
 
 from cloud_fundamentals_django import settings
 from django.conf.urls.static import static
+from cloud_fundamentals_django.views import clock_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', clock_view, name='home')
 ]
 
 if settings.DEBUG:

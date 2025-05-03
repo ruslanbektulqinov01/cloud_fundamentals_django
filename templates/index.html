@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tashkent Luxury Analog Clock</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap');
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1e2a78, #ff9e9e);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Decorative floating particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .clock-title {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        .clock-wrapper {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clock-outer-ring {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #091c4c, #091c4c);
+            box-shadow:
+                    0 0 60px rgba(27, 106, 221, 0.6),
+                    inset 0 0 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            animation: glow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 60px rgba(27, 106, 221, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 80px rgba(47, 182, 242, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.3); }
+            100% { box-shadow: 0 0 60px rgba(144, 58, 249, 0.7), inset 0 0 40px rgba(0, 0, 0, 0.3); }
+        }
+
+        .clock {
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, #0c0f38 0%, #06071b 70%);
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .clock::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.06) 50%, transparent 60%);
+            animation: reflectionSweep 10s linear infinite;
+        }
+
+        @keyframes reflectionSweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .clock-face {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .center-design {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #3a70d6, #091c4c);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            z-index: 11;
+        }
+
+        .center-point {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            background: linear-gradient(to right, #ffd700, #f5a623);
+            border-radius: 50%;
+            z-index: 12;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+        }
+
+        .hour-marks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hour-marks div {
+            position: absolute;
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(to bottom, #ffd700, #f5a623);
+            left: 50%;
+            margin-left: -2px;
+            transform-origin: 2px 160px;
+            border-radius: 2px;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.6);
+        }
+
+        .minute-marks div {
+            position: absolute;
+            width: 2px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.4);
+            left: 50%;
+            margin-left: -1px;
+            transform-origin: 1px 160px;
+            border-radius: 1px;
+        }
+
+        .clock-numbers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .clock-numbers span {
+            position: absolute;
+            font-size: 18px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+            font-weight: 600;
+        }
+
+        .hour-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 90px;
+            margin-left: -4px;
+            margin-top: -80px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+            transform-origin: bottom center;
+            border-radius: 6px;
+            z-index: 8;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .minute-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 130px;
+            margin-left: -3px;
+            margin-top: -120px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
+            transform-origin: bottom center;
+            border-radius: 6px;
+            z-index: 7;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .second-hand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 150px;
+            margin-left: -1px;
+            margin-top: -145px;
+            background: linear-gradient(to top, #ff4b4b, #ff0000);
+            transform-origin: bottom center;
+            border-radius: 1px;
+            z-index: 6;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+        }
+
+        .city-time {
+            margin-top: 30px;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 15px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .city-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        .time-display {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .date-display {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* Quote styling */
+        .quote-container {
+            margin-top: 40px;
+            text-align: center;
+            max-width: 500px;
+            position: relative;
+            padding: 20px;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-style: italic;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .quote-decoration {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(255, 215, 0, 0.6), transparent);
+            margin: 15px auto;
+            position: relative;
+        }
+
+        .quote-decoration::before, .quote-decoration::after {
+            content: "";
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            top: -2px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        .quote-decoration::before {
+            left: calc(50% - 50px);
+        }
+
+        .quote-decoration::after {
+            right: calc(50% - 50px);
+        }
+
+        .quote-text::before, .quote-text::after {
+            content: '"';
+            font-size: 60px;
+            font-family: 'Playfair Display', serif;
+            color: rgba(255, 215, 0, 0.4);
+            position: absolute;
+            line-height: 0;
+        }
+
+        .quote-text::before {
+            left: -20px;
+            top: 15px;
+        }
+
+        .quote-text::after {
+            right: -20px;
+            bottom: -10px;
+        }
+
+        @keyframes quoteGlow {
+            0% { text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+            50% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+            100% { text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        }
+
+        /* Making the clock responsive */
+        @media (max-width: 500px) {
+            .clock-wrapper, .clock-outer-ring {
+                width: 300px;
+                height: 300px;
+            }
+
+            .clock {
+                width: 250px;
+                height: 250px;
+            }
+
+            .hour-marks div, .minute-marks div {
+                transform-origin: center 125px;
+            }
+
+            .hour-hand {
+                height: 70px;
+                margin-top: -60px;
+            }
+
+            .minute-hand {
+                height: 100px;
+                margin-top: -90px;
+            }
+
+            .second-hand {
+                height: 120px;
+                margin-top: -110px;
+            }
+
+            .clock-title {
+                font-size: 22px;
+            }
+
+            .time-display {
+                font-size: 28px;
+            }
+
+            .quote-text {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .clock-wrapper, .clock-outer-ring {
+                width: 250px;
+                height: 250px;
+            }
+
+            .clock {
+                width: 210px;
+                height: 210px;
+            }
+
+            .hour-marks div, .minute-marks div {
+                transform-origin: center 105px;
+            }
+
+            .hour-hand {
+                height: 60px;
+                margin-top: -50px;
+            }
+
+            .minute-hand {
+                height: 80px;
+                margin-top: -70px;
+            }
+
+            .second-hand {
+                height: 90px;
+                margin-top: -80px;
+            }
+
+            .time-display {
+                font-size: 24px;
+            }
+
+            .quote-text {
+                font-size: 18px;
+            }
+        }
+
+        /* For the shine effect on the clock */
+        .shine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+            z-index: 2;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<div class="particles" id="particles"></div>
+
+<div class="clock-container">
+    <h1 class="clock-title">TASHKENT TIME</h1>
+
+    <div class="clock-wrapper">
+        <div class="clock-outer-ring">
+            <div class="clock">
+                <div class="shine"></div>
+                <div class="clock-face">
+                    <div class="hour-marks" id="hour-marks"></div>
+                    <div class="minute-marks" id="minute-marks"></div>
+                    <div class="clock-numbers" id="clock-numbers"></div>
+                    <div class="hour-hand" id="hour-hand"></div>
+                    <div class="minute-hand" id="minute-hand"></div>
+                    <div class="second-hand" id="second-hand"></div>
+                    <div class="center-design"></div>
+                    <div class="center-point"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="city-time">
+        <div class="city-label">TASHKENT, UZBEKISTAN</div>
+        <div class="time-display" id="tashkent-time">00:00:00</div>
+        <div class="date-display" id="tashkent-date">Monday, January 1</div>
+    </div>
+
+    <div class="quote-container">
+        <div class="quote-text" id="quote">Time waits for no one</div>
+        <span class="quote-decoration"></span>
+    </div>
+</div>
+
+<script>
+    // Create clock numbers
+    const clockNumbers = document.getElementById('clock-numbers');
+    const radius = 135; // Distance from center to numbers
+
+    for (let i = 1; i <= 12; i++) {
+        const number = document.createElement('span');
+        number.textContent = i;
+        const angle = (i * 30) * (Math.PI / 180); // Convert to radians
+        const x = radius * Math.sin(angle);
+        const y = -radius * Math.cos(angle); // Negative because Y is inverted in the DOM
+        number.style.left = `calc(50% + ${x}px)`;
+        number.style.top = `calc(50% + ${y}px)`;
+        number.style.transform = 'translate(-50%, -50%)';
+        clockNumbers.appendChild(number);
+    }
+
+    // Create hour marks
+    const hourMarksContainer = document.getElementById('hour-marks');
+    for (let i = 0; i < 12; i++) {
+        const hourMark = document.createElement('div');
+        hourMark.style.transform = `rotate(${i * 30}deg)`;
+        hourMarksContainer.appendChild(hourMark);
+    }
+
+    // Create minute marks
+    const minuteMarksContainer = document.getElementById('minute-marks');
+    for (let i = 0; i < 60; i++) {
+        if (i % 5 !== 0) {  // Skip where hour marks are
+            const minuteMark = document.createElement('div');
+            minuteMark.style.transform = `rotate(${i * 6}deg)`;
+            minuteMarksContainer.appendChild(minuteMark);
+        }
+    }
+
+    // Create particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 50;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+
+        // Random size between 2px and 5px
+        const size = Math.random() * 3 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+
+        // Random animation duration between 15s and 40s
+        const duration = Math.random() * 25 + 15;
+        particle.style.animationDuration = `${duration}s`;
+
+        // Random delay
+        particle.style.animationDelay = `${Math.random() * duration}s`;
+
+        particlesContainer.appendChild(particle);
+    }
+
+    // Add animation to the quote
+    const quote = document.getElementById('quote');
+    quote.style.animation = 'quoteGlow 4s ease-in-out infinite';
+
+    function updateClock() {
+        // Tashkent is UTC+5
+        const tashkentOffset = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
+        const now = new Date();
+        const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const tashkentTime = new Date(utcTime + tashkentOffset);
+
+        const hours = tashkentTime.getHours() % 12;
+        const minutes = tashkentTime.getMinutes();
+        const seconds = tashkentTime.getSeconds();
+        const milliseconds = tashkentTime.getMilliseconds();
+
+        // Calculate angles for clock hands, including smooth movement
+        const hourAngle = (hours * 30) + (minutes * 0.5) + (seconds * 0.008333); // 30 degrees per hour + adjustment for minutes and seconds
+        const minuteAngle = (minutes * 6) + (seconds * 0.1); // 6 degrees per minute + adjustment for seconds
+        const secondAngle = (seconds * 6) + (milliseconds * 0.006); // 6 degrees per second + smooth adjustment for milliseconds
+
+        // Set rotations with smooth cubic-bezier transition
+        document.getElementById('hour-hand').style.transform = `rotate(${hourAngle}deg)`;
+        document.getElementById('minute-hand').style.transform = `rotate(${minuteAngle}deg)`;
+        document.getElementById('second-hand').style.transform = `rotate(${secondAngle}deg)`;
+
+        // Update digital time display
+        const timeString = tashkentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        document.getElementById('tashkent-time').textContent = timeString;
+
+        // Update date display
+        const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+        const dateString = tashkentTime.toLocaleDateString(undefined, dateOptions);
+        document.getElementById('tashkent-date').textContent = dateString;
+
+        // Request next animation frame for smoother second hand
+        requestAnimationFrame(updateClock);
+    }
+
+    // Start the clock
+    updateClock();
+</script>
+</body>
+</html>
